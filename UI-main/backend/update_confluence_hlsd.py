@@ -1,8 +1,8 @@
 import os
 import requests
 
-CONFLUENCE_URL = ""
-PAGE_ID = ""
+CONFLUENCE_URL = "https://dhivakarnathk2993.atlassian.net/wiki"
+PAGE_ID = "19726345"
 USERNAME = os.getenv("CONFLUENCE_USER_EMAIL")
 API_TOKEN = os.getenv("CONFLUENCE_API_KEY")
 

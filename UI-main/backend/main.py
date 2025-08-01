@@ -35,8 +35,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173", 
         "http://127.0.0.1:5173",
-        "",  # Add your Render URL
-        "",  # Add frontend domain
+        "https://final-back-wkps.onrender.com",  # Add your Render URL
+        "https://final-front-xjlz.onrender.com",  # Add frontend domain
         "*"  # For development, you can allow all origins
     ],
     allow_credentials=True,
