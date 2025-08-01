@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://backend-5v02.onrender.com';
+const API_BASE_URL = '';
 
 export interface SearchRequest {
   space_key: string;
@@ -391,8 +391,8 @@ class ApiService {
 
     const result = await response.json();
     
-    // Handle binary files (PDF, DOCX) that are base64 encoded
-    if (request.format === 'pdf' || request.format === 'docx') {
+    // Handle binary files (PDF, DOCX, PPTX) that are base64 encoded
+    if (request.format === 'pdf' || request.format === 'docx' || request.format === 'pptx') {
       const binaryString = atob(result.file);
       const bytes = new Uint8Array(binaryString.length);
       for (let i = 0; i < binaryString.length; i++) {

@@ -85,7 +85,8 @@ const ImageInsights: React.FC<ImageInsightsProps> = ({ onClose, onFeatureSelect,
   const exportFormats = [
     { value: 'markdown', label: 'Markdown' },
     { value: 'pdf', label: 'PDF' },
-    { value: 'docx', label: 'Word Document' }
+    { value: 'docx', label: 'Word Document' },
+    { value: 'pptx', label: 'PowerPoint' }
   ];
 
   // --- History feature for Q&A ---
@@ -506,6 +507,7 @@ ${image.qa?.map(qa => `**Q:** ${qa.question}\n**A:** ${qa.answer}`).join('\n\n')
       a.href = url;
       a.download = `${fileName || image.name.replace(/\s+/g, '_')}_analysis.${exportFormat}`;
       a.click();
+      URL.revokeObjectURL(url); // Clean up the URL
     } catch (error) {
       console.error('Failed to export image:', error);
       // Fallback to client-side export
@@ -530,6 +532,7 @@ ${image.qa?.map(qa => `**Q:** ${qa.question}\n**A:** ${qa.answer}`).join('\n\n')
       a.href = url;
       a.download = `${fileName || image.name.replace(/\s+/g, '_')}_analysis.${exportFormat}`;
       a.click();
+      URL.revokeObjectURL(url); // Clean up the URL
     }
   };
 
@@ -576,6 +579,7 @@ ${image.qa?.map(qa => `**Q:** ${qa.question}\n**A:** ${qa.answer}`).join('\n\n')
             a.href = url;
             a.download = response.filename;
             a.click();
+            URL.revokeObjectURL(url); // Clean up the URL
             return;
           }
         }
@@ -609,6 +613,7 @@ ${JSON.stringify(chartData.data, null, 2)}
       a.href = url;
       a.download = `${chartFileName || 'chart'}.${currentExportFormat}`;
       a.click();
+      URL.revokeObjectURL(url); // Clean up the URL
     } catch (error) {
       console.error('Failed to export chart:', error);
       // Fallback to client-side export
@@ -634,6 +639,7 @@ ${JSON.stringify(chartData.data, null, 2)}
       a.href = url;
       a.download = `${chartFileName || 'chart'}.${currentExportFormat}`;
       a.click();
+      URL.revokeObjectURL(url); // Clean up the URL
     } finally {
       setIsExportingChart(false);
     }
