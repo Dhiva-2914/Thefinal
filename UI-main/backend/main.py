@@ -2626,38 +2626,36 @@ async def create_chart(request: ChartRequest, req: Request):
             plt.tight_layout()
         # Handle different export formats
         if request.format.lower() == "pptx":
-            # Create PowerPoint presentation with chart data
+            # Save chart as PNG image first
+            img_buf = io.BytesIO()
+            plt.savefig(img_buf, format='png', bbox_inches="tight", dpi=300)
+            img_buf.seek(0)
+            
+            # Create PowerPoint presentation with the chart image
             prs = Presentation()
             
-            # Add title slide
-            title_slide_layout = prs.slide_layouts[0]
-            slide = prs.slides.add_slide(title_slide_layout)
-            title = slide.shapes.title
-            subtitle = slide.placeholders[1]
+            # Add a blank slide
+            blank_slide_layout = prs.slide_layouts[6]  # Blank layout
+            slide = prs.slides.add_slide(blank_slide_layout)
             
-            title.text = f"{request.chart_type} Chart"
-            subtitle.text = f"Generated from {request.page_title}"
+            # Add the chart image to the slide
+            # Calculate image dimensions to fit nicely on the slide
+            slide_width = prs.slide_width
+            slide_height = prs.slide_height
             
-            # Add chart slide with data
-            content_slide_layout = prs.slide_layouts[1]
-            slide = prs.slides.add_slide(content_slide_layout)
-            title = slide.shapes.title
-            content = slide.placeholders[1]
+            # Add image to slide (centered)
+            left = Inches(1)
+            top = Inches(1)
+            width = slide_width - Inches(2)
+            height = slide_height - Inches(2)
             
-            title.text = "Chart Data"
+            slide.shapes.add_picture(img_buf, left, top, width, height)
             
-            # Create data summary
-            data_summary = f"Chart Type: {request.chart_type}\n\n"
-            data_summary += "Data Summary:\n"
-            data_summary += df.to_string(index=False)
-            
-            content.text = data_summary
-            
-            # Save to buffer
-            buf = io.BytesIO()
-            prs.save(buf)
-            buf.seek(0)
-            chart_bytes = buf.getvalue()
+            # Save PowerPoint to buffer
+            pptx_buf = io.BytesIO()
+            prs.save(pptx_buf)
+            pptx_buf.seek(0)
+            chart_bytes = pptx_buf.getvalue()
             chart_base64 = base64.b64encode(chart_bytes).decode()
             return {
                 "chart_data": chart_base64,
